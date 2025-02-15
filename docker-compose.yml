@@ -1,0 +1,46 @@
+services:
+  portfolio-cache-server:
+    restart: always
+    container_name: sonar-watch-portfolio-cache-server
+    env_file: ".env.production"
+    ports:
+      - "3000:3000"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks:
+      - sonar-watch-portfolio-network
+
+  portfolio-api:
+    restart: always
+    container_name: sonar-watch-portfolio-api
+    env_file: ".env.production"
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    networks:
+      - sonar-watch-portfolio-network
+    depends_on:
+      portfolio-cache-server:
+        condition: service_healthy
+
+networks:
+  sonar-watch-portfolio-network:
+    name: sonar-watch-portfolio-network
+    driver: bridge
