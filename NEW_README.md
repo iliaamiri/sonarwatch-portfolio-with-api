@@ -48,10 +48,13 @@ sed -i 's|CACHE_CONFIG_OVERLAY_HTTP_BASES=http://localhost:3000/,https://portfol
 Tip: Make sure to review both ENV files `.env` and `.env.production` and fill
 the RPC endpoints as you see fit. There are many different RPCs that you can use
 but this documentation mainly focuses on Kamino plugin which uses a Solana RPC.
+- Particularly, the `PORTFOLIO_SOLANA_RPC` must be filled in order to use Kamino
+plugin's Jobs and Fetchers. Make sure you have it filled in both `.env` and 
+`.env.production` files.
 
 Tip: You can set the `PORTFOLIO_API_DEBUG` variable to `true` in `.env` or 
 `.env.production` to see API logs in production servers. I set it to false to
-follow best practices. But, feel free to set it to tree to test it at first.
+follow best practices. But, feel free to set it to free to test it at first.
 
 3. Install the dependencies
 ```bash
