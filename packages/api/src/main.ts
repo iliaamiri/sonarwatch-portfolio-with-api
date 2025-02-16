@@ -11,25 +11,13 @@ import durationForHumans from "packages/plugins/src/utils/misc/durationForHumans
 import sleep from "packages/plugins/src/utils/misc/sleep";
 import * as dotenv from 'dotenv';
 import { resolve } from 'path';
-import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { consoleLog } from 'packages/plugins/src/utils/misc/smartConsoleMethods';
 import { json } from './utils';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 dotenv.config({ path: resolve(__dirname, '../../.env') });
-
-const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API Documentation',
-      version: '1.0.0',
-    },
-  },
-  apis: ['./packages/api/src/*.ts'], // Path to API routes
-};
-
-const specs = swaggerJsdoc(options);
 
 const host = process.env['HOST'] ?? '0.0.0.0';
 const port = process.env['PORT'] ? Number(process.env['PORT']) : 8080;
@@ -41,7 +29,15 @@ const api = express.Router();
 
 const allJobs = [...jobs, getLlamaProtocolsJob(platforms)];
 
-api.use('/api', swaggerUi.serve, swaggerUi.setup(specs));
+try {
+  const swaggerDocument = JSON.parse(
+    fs.readFileSync(path.join(__dirname, 'swagger.json'), 'utf-8')
+  );
+
+  api.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+} catch (error) {
+  console.error('Failed to load Swagger documentation:', error);
+}
 
 /**
  * @openapi

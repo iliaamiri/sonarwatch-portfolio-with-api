@@ -7,7 +7,13 @@
     "nx:version": "run-s nx:version:core nx:version:plugins postversion",
     "nx:version:plugins": "nx run plugins:version --releaseAs=patch",
     "nx:version:core": "nx run core:version --releaseAs=patch",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "build:cache-server": "ts-node build-cache-server.ts",
+    "build:api-server": "ts-node build-api-server.ts",
+    "serve:cache-server": "node dist/cache-server/serve-cache.js",
+    "serve:api": "node dist/api/api-server.js",
+    "start:cache": "npm run build:cache-server && npm run serve:cache-server",
+    "start:api": "npm run build:api-server && npm run serve:api"
   },
   "engines": {
     "node": ">18"
