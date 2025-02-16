@@ -113,6 +113,9 @@ chmod +x ./docker-compose-up.sh # making sure the shell file is executable.
 ./docker-compose-up.sh 
 ```
 
+Warning: Make sure to stop your Cache server and API server locally to avoid 
+port conflicts.
+
 ## Troubleshooting
 1. A container is not healthy.
    You can inspect the container to see why it's marked (unhealthy).
