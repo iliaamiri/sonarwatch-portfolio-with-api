@@ -70,13 +70,16 @@ const executor: FetcherExecutor = async (owner: string, cache: Cache) => {
       type: PortfolioElementType.trade,
       networkId: NetworkId.solana,
       platformId,
-      label: 'Deposit',
+      label: 'SmartDCA',
       data: {
         assets: {
           input: inputAsset,
           output: outputAsset,
         },
-        filledPercentage: account.inUsed.div(initialInputAmount).toNumber(),
+        filledPercentage: account.inUsed
+          .div(10 ** inputTokenPrice.decimals)
+          .div(initialInputAmount)
+          .toNumber(),
         initialInputAmount,
         inputAddress,
         outputAddress,
@@ -87,6 +90,8 @@ const executor: FetcherExecutor = async (owner: string, cache: Cache) => {
           .div(10 ** outputTokenPrice.decimals)
           .toNumber(),
         ref: account.pubkey.toString(),
+        contract: valueAverageProgramId.toString(),
+        link: 'https://jup.ag/recurring/',
       },
       value: getUsdValueSum([inputAsset.value, outputAsset?.value || 0]),
     };

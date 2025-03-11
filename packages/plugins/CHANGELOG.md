@@ -2,6 +2,113 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [0.14.139](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.138...plugins-0.14.139) (2025-03-06)
+
+
+
+## [0.14.138](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.137...plugins-0.14.138) (2025-03-04)
+
+
+### Reverts
+
+* Revert "fix drift" ([b1318fa](https://github.com/sonarwatch/portfolio/commit/b1318fa453a4d1a723f47791051942fba2e98d13))
+
+
+
+## [0.14.137](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.136...plugins-0.14.137) (2025-03-04)
+
+
+
+## [0.14.136](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.135...plugins-0.14.136) (2025-02-28)
+
+
+
+## [0.14.135](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.134...plugins-0.14.135) (2025-02-28)
+
+
+
+## [0.14.134](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.133...plugins-0.14.134) (2025-02-28)
+
+
+
+## [0.14.133](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.132...plugins-0.14.133) (2025-02-27)
+
+
+
+## [0.14.132](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.131...plugins-0.14.132) (2025-02-27)
+
+
+
+## [0.14.131](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.130...plugins-0.14.131) (2025-02-27)
+
+
+
+## [0.14.130](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.129...plugins-0.14.130) (2025-02-27)
+
+
+
+## [0.14.129](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.128...plugins-0.14.129) (2025-02-26)
+
+
+
+## [0.14.128](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.127...plugins-0.14.128) (2025-02-25)
+
+
+### Bug Fixes
+
+* **driftPlatforms:** add missing platforms export ([777adbe](https://github.com/sonarwatch/portfolio/commit/777adbecbe0ed6a51587acdec6715672bbcdb16a))
+* **tokenList:** isLatestVersion-version-check ([f9e0c0b](https://github.com/sonarwatch/portfolio/commit/f9e0c0b8a716a3577abfc691eb7413fc4c72f2fa))
+
+
+
+## [0.14.127](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.126...plugins-0.14.127) (2025-02-24)
+
+
+
+## [0.14.126](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.125...plugins-0.14.126) (2025-02-24)
+
+
+
+## [0.14.125](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.124...plugins-0.14.125) (2025-02-21)
+
+
+
+## [0.14.124](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.123...plugins-0.14.124) (2025-02-21)
+
+
+
+## [0.14.123](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.122...plugins-0.14.123) (2025-02-21)
+
+
+
+## [0.14.122](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.121...plugins-0.14.122) (2025-02-21)
+
+
+
+## [0.14.121](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.120...plugins-0.14.121) (2025-02-21)
+
+
+
+## [0.14.120](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.119...plugins-0.14.120) (2025-02-21)
+
+
+
+## [0.14.119](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.118...plugins-0.14.119) (2025-02-21)
+
+
+
+## [0.14.118](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.117...plugins-0.14.118) (2025-02-20)
+
+
+
+## [0.14.117](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.116...plugins-0.14.117) (2025-02-20)
+
+
+
+## [0.14.116](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.115...plugins-0.14.116) (2025-02-19)
+
+
+
 ## [0.14.115](https://github.com/sonarwatch/portfolio/compare/plugins-0.14.114...plugins-0.14.115) (2025-02-17)
 
 

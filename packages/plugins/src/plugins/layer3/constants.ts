@@ -5,8 +5,14 @@ export const platformId = 'layer3';
 export const platform: Platform = {
   id: platformId,
   name: 'Layer3',
-  image: 'https://sonar.watch/img/platforms/layer3.webp',
+  image:
+    'https://sonarwatch.github.io/portfolio/assets/images/platforms/layer3.webp',
   website: 'https://solana.layer3.xyz/',
+  description: 'Powering the next generation of consumer attention.',
+  github: 'https://github.com/layer3xyz',
+  discord: 'https://discord.gg/layer3',
+  twitter: 'https://twitter.com/layer3xyz',
+  documentation: 'https://docs.layer3.xyz/',
 };
 
 export const programId = new PublicKey(

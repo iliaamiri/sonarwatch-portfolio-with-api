@@ -32,6 +32,7 @@ export type PortfolioElementLabel =
   | 'Margin'
   | 'LimitOrder'
   | 'DCA'
+  | 'SmartDCA'
   | 'Leverage';
 
 export type PortfolioAssetAttributes = {
@@ -124,10 +125,6 @@ export type PortfolioAssetCollectibleData = {
   address: string;
   amount: number;
   price: UsdValue;
-  /**
-   * @deprecated
-   * This params has been deprecated. Use name from PortfolioAssetCommon instead.
-   */
   name?: string;
   description?: string;
   imageUri?: string;
@@ -137,7 +134,7 @@ export type PortfolioAssetCollectibleData = {
 };
 
 export type CollectibleCollection = {
-  id: string;
+  id?: string;
   floorPrice: UsdValue;
   name?: string;
 };
@@ -208,7 +205,9 @@ export type SourceRefName =
   | 'Vault'
   | 'Lending Market'
   | 'Strategy'
-  | 'NFT Mint';
+  | 'NFT Mint'
+  | 'Reserve'
+  | 'Proposal';
 
 /**
  * Represents references to on-chain accounts.
@@ -256,7 +255,7 @@ export type PortfolioElementMultiple = PortfolioElementCommon & {
  */
 export type PortfolioElementTradeData = {
   assets: {
-    input: PortfolioAsset;
+    input: PortfolioAsset | null;
     output: PortfolioAsset | null;
   };
   inputAddress: string;
@@ -278,6 +277,8 @@ export type PortfolioElementTradeData = {
    * Expire at timestamp in ms
    */
   expireAt?: number;
+
+  contract?: string;
   ref?: string;
   sourceRefs?: SourceRef[];
   link?: string;
@@ -302,6 +303,8 @@ export type PortfolioLiquidity = {
   value: UsdValue;
   yields: Yield[];
   name?: string;
+
+  contract?: string;
   ref?: string;
   sourceRefs?: SourceRef[];
   link?: string;
@@ -343,14 +346,8 @@ export type IsoLevPosition = {
   pnlValue: UsdValue;
   liquidationPrice: UsdValue;
   leverage?: number;
-  tp?: {
-    gain: UsdValue;
-    price: UsdValue;
-  };
-  sl?: {
-    loss: UsdValue;
-    price: UsdValue;
-  };
+  tp?: number;
+  sl?: number;
   value: UsdValue;
 };
 
@@ -387,6 +384,8 @@ export type PortfolioElementLeverageData = {
    * Total value (total equity)
    */
   value: UsdValue;
+
+  contract?: string;
   ref?: string;
   sourceRefs?: SourceRef[];
   link?: string;
@@ -478,6 +477,7 @@ export type PortfolioElementBorrowLendData = {
    */
   expireOn?: number;
 
+  contract?: string;
   ref?: string;
   sourceRefs?: SourceRef[];
   link?: string;

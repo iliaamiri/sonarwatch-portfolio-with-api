@@ -13,7 +13,7 @@ import { Cache } from '../../../Cache';
 import { Fetcher, FetcherExecutor } from '../../../Fetcher';
 import { getClientSolana } from '../../../utils/clients';
 import { ParsedAccount, getParsedProgramAccounts } from '../../../utils/solana';
-import { perpetualsPositionsFilter } from '../filters';
+import { perpetualsPositionsFilter, positionRequestFilters } from '../filters';
 import { CustodyInfo, PerpetualPoolInfo } from '../types';
 import {
   custodiesKey,
@@ -21,15 +21,22 @@ import {
   perpsProgramId,
   platformId,
 } from './constants';
-import { Side, positionStruct } from './structs';
-import { getFeeAmount } from './helpers';
+import { Side, positionRequestStruct, positionStruct } from './structs';
+import {
+  custodyToBN,
+  getFeeAmount,
+  getLiquidationPrice,
+  positionToBn,
+  USD_POWER,
+  USD_POWER_BIGN,
+} from './helpersPerps';
 
 const usdFactor = new BigNumber(10 ** 6);
 const executor: FetcherExecutor = async (
   owner: string,
   cache: Cache
 ): Promise<PortfolioElementLeverage[]> => {
-  const client = getClientSolana();
+  const client = getClientSolana({ commitment: 'processed' });
 
   const positionAccounts = await getParsedProgramAccounts(
     client,
@@ -43,7 +50,7 @@ const executor: FetcherExecutor = async (
   )
     return [];
 
-  const [custodiesAccounts, perpPoolsArr] = await Promise.all([
+  const [custodiesAccounts, perpPoolsArr, prAccounts] = await Promise.all([
     cache.getItem<CustodyInfo[]>(custodiesKey, {
       prefix: platformId,
       networkId: NetworkId.solana,
@@ -52,8 +59,39 @@ const executor: FetcherExecutor = async (
       prefix: platformId,
       networkId: NetworkId.solana,
     }),
+    getParsedProgramAccounts(
+      client,
+      positionRequestStruct,
+      perpsProgramId,
+      positionRequestFilters(owner)
+    ),
   ]);
+
   if (!custodiesAccounts || !perpPoolsArr) return [];
+
+  const prAccountsObj: Record<
+    string,
+    { tp: number | null; sl: number | null }
+  > = {};
+
+  prAccounts.forEach((a) => {
+    const position = a.position.toString();
+    if (a.executed || !a.triggerPrice) return;
+    if (!prAccountsObj[position])
+      prAccountsObj[position] = {
+        tp: null,
+        sl: null,
+      };
+
+    if (a.triggerAboveThreshold)
+      prAccountsObj[position].tp = a.triggerPrice
+        .dividedBy(USD_POWER_BIGN)
+        .toNumber();
+    else
+      prAccountsObj[position].sl = a.triggerPrice
+        .dividedBy(USD_POWER_BIGN)
+        .toNumber();
+  });
 
   const perpPools: Map<string, PerpetualPoolInfo> = new Map();
   perpPoolsArr.forEach((a) => {
@@ -116,7 +154,18 @@ const executor: FetcherExecutor = async (
       new BN(custody.pricing.tradeSpreadLong)
     );
 
-    const openAndCloseFees = openFee.add(closeFee).div(new BN(1000000));
+    const curtime = new BN(Number(new Date()) / 1000);
+    const liquidationPriceBn = getLiquidationPrice(
+      positionToBn(position),
+      custodyToBN(custody),
+      custodyToBN(collateralCustody),
+      curtime
+    );
+    const liquidationPrice = new BigNumber(liquidationPriceBn.toString())
+      .div(usdFactor)
+      .toNumber();
+
+    const openAndCloseFees = openFee.add(closeFee).div(USD_POWER);
     const borrowFee = sizeUsd
       .times(
         new BigNumber(
@@ -135,11 +184,15 @@ const executor: FetcherExecutor = async (
     const netPnlValue = rawPnlValue.minus(fees);
     const value = collateralValue.plus(netPnlValue);
 
+    const positionPubkey = position.pubkey.toString();
+    const tp = prAccountsObj[positionPubkey]?.tp || undefined;
+    const sl = prAccountsObj[positionPubkey]?.sl || undefined;
+
     levPositions.push({
       address: custody.mint,
       side: isLong ? LeverageSide.long : LeverageSide.short,
       leverage: leverage.toNumber(),
-      liquidationPrice: null,
+      liquidationPrice,
       collateralValue: collateralValue.toNumber(),
       size: size.toNumber(),
       sizeValue: sizeValue.toNumber(),
@@ -147,6 +200,8 @@ const executor: FetcherExecutor = async (
       value: value.toNumber(),
       markPrice: currentPrice,
       entryPrice: entryPrice.toNumber(),
+      tp,
+      sl,
     });
   }
 
@@ -161,6 +216,7 @@ const executor: FetcherExecutor = async (
           value,
         },
         value,
+        contract: perpsProgramId.toString(),
       },
       label: 'Leverage',
       networkId: NetworkId.solana,

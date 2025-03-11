@@ -9,7 +9,7 @@ import { DCAFilters } from './filters';
 import { ElementRegistry } from '../../../utils/elementbuilder/ElementRegistry';
 
 const executor: FetcherExecutor = async (owner: string, cache: Cache) => {
-  const client = getClientSolana();
+  const client = getClientSolana({ commitment: 'processed' });
 
   const accounts = await getParsedProgramAccounts(
     client,
@@ -24,7 +24,12 @@ const executor: FetcherExecutor = async (owner: string, cache: Cache) => {
   for (let i = 0; i < accounts.length; i++) {
     const account = accounts[i];
 
-    const element = elementRegistry.addElementTrade({ label: 'DCA' });
+    const element = elementRegistry.addElementTrade({
+      label: 'DCA',
+      ref: account.pubkey.toString(),
+      link: 'https://jup.ag/recurring/',
+      contract: dcaProgramId.toString(),
+    });
 
     element.setTrade({
       inputAsset: {
@@ -37,6 +42,7 @@ const executor: FetcherExecutor = async (owner: string, cache: Cache) => {
       },
       initialInputAmount: account.inDeposited,
       withdrawnOutputAmount: account.outWithdrawn,
+      createdAt: account.createdAt.toNumber() * 1000,
     });
   }
 

@@ -16,6 +16,7 @@ export type Params = {
   name?: string;
   tags?: string[];
   platformId?: string;
+  contract?: string;
   sourceRefs?: SourceRef[];
   ref?: string | PublicKey;
   link?: string;
@@ -53,6 +54,24 @@ export type PortfolioAssetGenericParams = {
   attributes?: PortfolioAssetAttributes;
   value?: number | BigNumber;
   name?: string;
+  sourceRefs?: SourceRef[];
+  ref?: string | PublicKey;
+  link?: string;
+};
+
+export type PortfolioAssetCollectibleParams = {
+  address: string | PublicKey;
+  amount?: number | BigNumber | string;
+  collection: {
+    name: string;
+    floorPrice: number | BigNumber | string; // in $, already shifted
+    imageUri?: string;
+  };
+  attributes?: PortfolioAssetAttributes;
+  name?: string;
+  sourceRefs?: SourceRef[];
+  ref?: string | PublicKey;
+  link?: string;
 };
 
 export type PortfolioAssetTokenParams = {
@@ -60,14 +79,19 @@ export type PortfolioAssetTokenParams = {
   amount: number | BigNumber | string;
   attributes?: PortfolioAssetAttributes;
   alreadyShifted?: boolean;
+  sourceRefs?: SourceRef[];
+  ref?: string | PublicKey;
+  link?: string;
 };
 
 export type TradeParams = {
-  inputAsset: PortfolioAssetTokenParams;
-  outputAsset: {
-    address: string | PublicKey;
+  inputAsset: Omit<PortfolioAssetTokenParams, 'amount'> & {
     amount?: number | BigNumber | string;
   };
+  outputAsset: Omit<PortfolioAssetTokenParams, 'amount'> & {
+    amount?: number | BigNumber | string;
+  };
+
   initialInputAmount: number | BigNumber | string;
   expectedOutputAmount?: number | BigNumber | string;
   withdrawnOutputAmount: number | BigNumber | string;

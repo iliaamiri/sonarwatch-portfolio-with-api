@@ -9,7 +9,7 @@ import { ElementRegistry } from '../../../utils/elementbuilder/ElementRegistry';
 import { limitOrderStruct, limitOrderV2Struct } from './structs';
 
 const executor: FetcherExecutor = async (owner: string, cache: Cache) => {
-  const client = getClientSolana();
+  const client = getClientSolana({ commitment: 'processed' });
 
   const accountsRes = await Promise.all([
     // V1
@@ -40,6 +40,12 @@ const executor: FetcherExecutor = async (owner: string, cache: Cache) => {
 
     const element = elementRegistry.addElementTrade({
       tags: isV1 ? ['deprecated'] : undefined,
+      ref: account.pubkey.toString(),
+      link: 'https://jup.ag/trigger/',
+      label: 'LimitOrder',
+      contract: isV1
+        ? limitV1ProgramId.toString()
+        : limitV2ProgramId.toString(),
     });
 
     element.setTrade({
